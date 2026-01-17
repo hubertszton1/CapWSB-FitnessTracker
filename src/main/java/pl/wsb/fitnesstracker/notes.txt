@@ -1,0 +1,25 @@
+1. Włączyłem Scheduling
+    Dodana @EnableScheduling w FitnessTracker.java - umożliwia cykliczne zadania
+
+2. Zaimplementowałem generator raportów
+    RaportTrainingGenerator.java
+    Filtruje treningi z ostatnich 7 dni
+    Oblicza: dystans, średnią prędkość, czas
+    Wypisuje raport w konsoli
+
+3. Scheduler - cykliczne uruchamianie
+    TrainingReportScheduler.java
+    Uruchamia się każdy poniedziałek o 00:00
+    Iteruje przez wszystkich użytkowników
+    Generuje raport dla każdego
+
+4. REST API dla treningów
+    Aby testy przeszły, dodałem:
+    TrainingDto.java - obiekty do przesyłania JSON
+    TrainingMapper.java - konwersja Training → TrainingDto
+    TrainingController.java - endpoints:
+    GET /v1/trainings - wszystkie treningi
+    GET /v1/trainings/{userId} - treningi użytkownika
+
+5. Powiększyłem TrainingServiceImpl
+    Dodana metoda getUserTrainings() - pobiera treningi konkretnego użytkownika
