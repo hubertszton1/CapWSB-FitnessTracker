@@ -1,5 +1,8 @@
 package pl.wsb.fitnesstracker.livecoding.ioc;
 
+/**
+ * Demonstrates the code without Inversion of Control (IoC) -
+ */
 public class WithoutIoC {
     public static void main(String[] args) {
         Foo foo = new Foo();

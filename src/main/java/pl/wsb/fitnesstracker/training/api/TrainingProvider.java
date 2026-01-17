@@ -1,7 +1,13 @@
 package pl.wsb.fitnesstracker.training.api;
 
+import pl.wsb.fitnesstracker.user.api.User;
+
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * Provides access to {@link Training} entities.
+ */
 public interface TrainingProvider {
 
     /**
@@ -12,5 +18,8 @@ public interface TrainingProvider {
      * @return An {@link Optional} containing the located Training, or {@link Optional#empty()} if not found
      */
     Optional<Training> getTraining(Long trainingId);
-
+/**
+ * Retrieves all trainings
+ */
+    List<Training> findAllTrainings();
 }

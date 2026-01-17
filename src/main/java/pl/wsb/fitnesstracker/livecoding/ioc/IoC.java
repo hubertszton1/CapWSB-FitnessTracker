@@ -1,5 +1,7 @@
 package pl.wsb.fitnesstracker.livecoding.ioc;
-
+/**
+ * Demonstrates the concept of Inversion of Control (IoC)
+ */
 public class IoC {
 
     public static void main(String[] args) {

@@ -63,7 +63,7 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         User user1 = existingUser(generateUser());
         User user2 = existingUser(generateUser());
 
-        mockMvc.perform(get("/v1/users/simple").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users/basic").contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())

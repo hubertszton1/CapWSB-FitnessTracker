@@ -1,5 +1,6 @@
 package pl.wsb.fitnesstracker.loader;
 
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -28,29 +29,45 @@ import static java.util.Objects.isNull;
 @Profile("loadInitialData")
 @Slf4j
 @ToString
+@RequiredArgsConstructor
 class InitialDataLoader {
 
     private final JpaRepository<User, Long> userRepository;
 
     private final JpaRepository<Training, Long> trainingRepository;
-
-    InitialDataLoader(
-            final JpaRepository<User, Long> userRepository,
-            final JpaRepository<Training, Long> trainingRepository) {
-        this.userRepository = userRepository;
-        this.trainingRepository = trainingRepository;
-    }
-
+    /**
+     * Event listener method triggered after the Spring application context is refreshed.
+     *
+     * @param event the context refreshed event
+     */
     @EventListener
     @Transactional
+    @Profile("loadInitialData")
     @SuppressWarnings({"squid:S1854", "squid:S1481", "squid:S1192", "unused"})
     public void loadInitialData(ContextRefreshedEvent event) {
         verifyDependenciesAutowired();
+
+        log.info("Loading initial data to the database");
+
         List<User> sampleUserList = generateSampleUsers();
         List<Training> sampleTrainingList = generateTrainingData(sampleUserList);
 
+
+        User swMikolaj = generateUser("Mikołaj", "Święty", 0);
+        sampleUserList.add(swMikolaj);
+
+
+        log.info("Finished loading initial data");
     }
 
+    /**
+     * Generates and saves a {@link User} with the given name, last name, and age.
+     *
+     * @param name     the first name of the user
+     * @param lastName the last name of the user
+     * @param age      the age of the user in years
+     * @return the saved {@link User} entity
+     */
     private User generateUser(String name, String lastName, int age) {
         User user = new User(name,
                 lastName,
@@ -59,6 +76,11 @@ class InitialDataLoader {
         return userRepository.save(user);
     }
 
+    /**
+     * Generates a list of sample {@link User} entities and saves them to the database.
+     *
+     * @return list of saved sample users
+     */
     private List<User> generateSampleUsers() {
         List<User> users = new ArrayList<>();
 
@@ -72,11 +94,16 @@ class InitialDataLoader {
         users.add(generateUser("Noah", "Miller", 39));
         users.add(generateUser("Grace", "Anderson", 33));
         users.add(generateUser("Oliver", "Swift", 29));
-        users.add(generateUser("Mikołaj", "Święty", 100));
 
         return users;
     }
 
+    /**
+     * Generates sample {@link Training} data for the given list of users and saves them to the database.
+     *
+     * @param users list of users to associate training sessions with
+     * @return list of saved {@link Training} entities
+     */
     private List<Training> generateTrainingData(List<User> users) {
         List<Training> trainingData = new ArrayList<>();
 
@@ -162,7 +189,10 @@ class InitialDataLoader {
 
         return trainingData;
     }
-
+    /**
+     * Verifies that the required repositories have been autowired correctly.
+     * Throws an {@link IllegalStateException} if dependencies are missing.
+     */
     private void verifyDependenciesAutowired() {
         if (isNull(userRepository)) {
             throw new IllegalStateException("Initial data loader was not autowired correctly " + this);
